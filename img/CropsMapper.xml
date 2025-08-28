@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.farm.mapper.CropsMapper">
+    
+    <resultMap type="Crops" id="CropsResult">
+        <result property="id"    column="id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="plotNumber"    column="plot_number"    />
+        <result property="cropName"    column="crop_name"    />
+        <result property="cropCode"    column="crop_code"    />
+        <result property="growthStage"    column="growth_stage"    />
+        <result property="plantedAt"    column="planted_at"    />
+        <result property="expectedHarvestAt"    column="expected_harvest_at"    />
+        <result property="harvestAt"    column="harvest_at"    />
+        <result property="canHarvest"    column="can_harvest"    />
+        <result property="caretakerId"    column="caretaker_id"    />
+        <result property="updatedAt"    column="updated_at"    />
+        <result property="serviceOrderId"    column="service_order_id"    />
+    </resultMap>
+
+    <sql id="selectCropsVo">
+        select id, user_id, plot_number, crop_name, crop_code, growth_stage, planted_at, expected_harvest_at, harvest_at, can_harvest, caretaker_id, updated_at, service_order_id from crops
+    </sql>
+
+    <select id="selectCropsList" parameterType="Crops" resultMap="CropsResult">
+        <include refid="selectCropsVo"/>
+        <where>  
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="plotNumber != null "> and plot_number = #{plotNumber}</if>
+            <if test="cropName != null  and cropName != ''"> and crop_name like concat('%', #{cropName}, '%')</if>
+            <if test="cropCode != null  and cropCode != ''"> and crop_code = #{cropCode}</if>
+            <if test="growthStage != null  and growthStage != ''"> and growth_stage = #{growthStage}</if>
+            <if test="plantedAt != null "> and planted_at = #{plantedAt}</if>
+            <if test="expectedHarvestAt != null "> and expected_harvest_at = #{expectedHarvestAt}</if>
+            <if test="harvestAt != null "> and harvest_at = #{harvestAt}</if>
+            <if test="canHarvest != null "> and can_harvest = #{canHarvest}</if>
+            <if test="caretakerId != null "> and caretaker_id = #{caretakerId}</if>
+            <if test="updatedAt != null "> and updated_at = #{updatedAt}</if>
+            <if test="serviceOrderId != null  and serviceOrderId != ''"> and service_order_id = #{serviceOrderId}</if>
+        </where>
+    </select>
+    
+    <select id="selectCropsById" parameterType="Long" resultMap="CropsResult">
+        <include refid="selectCropsVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertCrops" parameterType="Crops" useGeneratedKeys="true" keyProperty="id">
+        insert into crops
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="plotNumber != null">plot_number,</if>
+            <if test="cropName != null">crop_name,</if>
+            <if test="cropCode != null">crop_code,</if>
+            <if test="growthStage != null and growthStage != ''">growth_stage,</if>
+            <if test="plantedAt != null">planted_at,</if>
+            <if test="expectedHarvestAt != null">expected_harvest_at,</if>
+            <if test="harvestAt != null">harvest_at,</if>
+            <if test="canHarvest != null">can_harvest,</if>
+            <if test="caretakerId != null">caretaker_id,</if>
+            <if test="updatedAt != null">updated_at,</if>
+            <if test="serviceOrderId != null">service_order_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="plotNumber != null">#{plotNumber},</if>
+            <if test="cropName != null">#{cropName},</if>
+            <if test="cropCode != null">#{cropCode},</if>
+            <if test="growthStage != null and growthStage != ''">#{growthStage},</if>
+            <if test="plantedAt != null">#{plantedAt},</if>
+            <if test="expectedHarvestAt != null">#{expectedHarvestAt},</if>
+            <if test="harvestAt != null">#{harvestAt},</if>
+            <if test="canHarvest != null">#{canHarvest},</if>
+            <if test="caretakerId != null">#{caretakerId},</if>
+            <if test="updatedAt != null">#{updatedAt},</if>
+            <if test="serviceOrderId != null">#{serviceOrderId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateCrops" parameterType="Crops">
+        update crops
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="plotNumber != null">plot_number = #{plotNumber},</if>
+            <if test="cropName != null">crop_name = #{cropName},</if>
+            <if test="cropCode != null">crop_code = #{cropCode},</if>
+            <if test="growthStage != null and growthStage != ''">growth_stage = #{growthStage},</if>
+            <if test="plantedAt != null">planted_at = #{plantedAt},</if>
+            <if test="expectedHarvestAt != null">expected_harvest_at = #{expectedHarvestAt},</if>
+            <if test="harvestAt != null">harvest_at = #{harvestAt},</if>
+            <if test="canHarvest != null">can_harvest = #{canHarvest},</if>
+            <if test="caretakerId != null">caretaker_id = #{caretakerId},</if>
+            <if test="updatedAt != null">updated_at = #{updatedAt},</if>
+            <if test="serviceOrderId != null">service_order_id = #{serviceOrderId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteCropsById" parameterType="Long">
+        delete from crops where id = #{id}
+    </delete>
+
+    <delete id="deleteCropsByIds" parameterType="String">
+        delete from crops where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
